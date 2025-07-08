@@ -8,261 +8,488 @@
     <!-- Telegram Web App Script -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
-    <!-- React and Babel -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-    
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            box-sizing: border-box;
         }
-        .telegram-viewport {
-            height: 100vh;
-            overflow-x: hidden;
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .header p {
+            color: rgba(255,255,255,0.8);
+            font-size: 1rem;
+        }
+        
+        .icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2rem;
+        }
+        
+        .start-btn {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            border-radius: 15px;
+            padding: 30px;
+            width: 100%;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .start-btn:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
+        }
+        
+        .start-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .tips {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .tips h3 {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .tips p {
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .learn-container {
+            display: none;
+            background: #f8fafc;
+            color: #1a202c;
+            min-height: 100vh;
+            margin: -20px;
+            padding: 0;
+        }
+        
+        .learn-header {
+            background: white;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #4a5568;
+            padding: 5px;
+            margin-right: 15px;
+        }
+        
+        .progress-bar {
+            display: flex;
+            gap: 5px;
+            margin: 15px 0;
+        }
+        
+        .progress-item {
+            flex: 1;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .progress-item.active {
+            background: #3182ce;
+        }
+        
+        .step-content {
+            padding: 20px;
+        }
+        
+        .step-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .step-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-right: 15px;
+        }
+        
+        .step-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .step-subtitle {
+            color: #718096;
+        }
+        
+        .tips-section {
+            margin: 20px 0;
+        }
+        
+        .tip-item {
+            background: #f7fafc;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border-left: 4px solid #3182ce;
+        }
+        
+        .example-box {
+            background: #ebf8ff;
+            border-left: 4px solid #3182ce;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .nav-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex: 1;
+        }
+        
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .nav-btn.prev {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        
+        .nav-btn.next {
+            background: #3182ce;
+            color: white;
+        }
+        
+        .nav-btn:not(:disabled):active {
+            transform: scale(0.98);
+        }
+        
+        .final-tips {
+            background: linear-gradient(135deg, #48bb78, #38b2ac);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+        
+        .final-tips h3 {
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .final-tips p {
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .complete-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            width: 100%;
+            margin-top: 15px;
+            font-weight: bold;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <div id="root" class="telegram-viewport"></div>
+    <div id="home-view" class="container">
+        <!-- Главный экран -->
+        <div class="header">
+            <div class="icon">💬</div>
+            <h1>STAR Method</h1>
+            <p>Структурированные ответы на собеседованиях</p>
+        </div>
 
-    <script type="text/babel">
-        const { useState, useEffect } = React;
-        const { ArrowRight, ArrowLeft, Users, Target, Zap, Trophy, BookOpen, MessageCircle } = lucide;
+        <button class="start-btn" onclick="startLearning()">
+            <div style="font-size: 2rem; margin-bottom: 10px;">📚</div>
+            <div style="margin-bottom: 5px;">Начать обучение</div>
+            <div style="font-size: 0.9rem; opacity: 0.8;">Пошаговое изучение метода</div>
+        </button>
 
-        const StarMethodMiniApp = () => {
-          const [currentView, setCurrentView] = useState('home');
-          const [activeStep, setActiveStep] = useState(0);
+        <div class="tips">
+            <h3>💡 Почему STAR работает?</h3>
+            <p>• Структурирует ваши мысли</p>
+            <p>• Показывает конкретные результаты</p>
+            <p>• Демонстрирует ваши навыки</p>
+            <p>• Делает ответ запоминающимся</p>
+        </div>
+    </div>
 
-          // Инициализация для Telegram Mini App
-          useEffect(() => {
-            if (window.Telegram?.WebApp) {
-              window.Telegram.WebApp.ready();
-              window.Telegram.WebApp.expand();
-              window.Telegram.WebApp.setHeaderColor('#1e40af');
+    <div id="learn-view" class="learn-container">
+        <!-- Экран обучения -->
+        <div class="learn-header">
+            <button class="back-btn" onclick="goHome()">←</button>
+            <span style="font-weight: bold;">Изучение метода</span>
+            <div class="progress-bar">
+                <div class="progress-item active" id="progress-0"></div>
+                <div class="progress-item" id="progress-1"></div>
+                <div class="progress-item" id="progress-2"></div>
+                <div class="progress-item" id="progress-3"></div>
+            </div>
+            <div style="font-size: 0.9rem; color: #718096; margin-top: 5px;">
+                Шаг <span id="current-step">1</span> из 4
+            </div>
+        </div>
+
+        <div class="step-content">
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-icon" id="step-icon" style="background: #3182ce;">S</div>
+                    <div>
+                        <div class="step-title" id="step-title">S - Situation</div>
+                        <div class="step-subtitle" id="step-subtitle">Ситуация</div>
+                    </div>
+                </div>
+
+                <p id="step-description" style="font-size: 1.1rem; margin-bottom: 20px;">
+                    Опишите контекст
+                </p>
+
+                <div class="tips-section">
+                    <h3 style="margin-bottom: 10px;">Ключевые вопросы:</h3>
+                    <div id="tips-container">
+                        <div class="tip-item">Где происходило?</div>
+                        <div class="tip-item">Кто участвовал?</div>
+                        <div class="tip-item">Какие обстоятельства?</div>
+                    </div>
+                </div>
+
+                <div class="example-box">
+                    <h4 style="color: #2b6cb0; margin-bottom: 8px;">Пример ответа:</h4>
+                    <p id="step-example" style="color: #2c5282; font-size: 0.9rem;">
+                        В проекте была критическая ситуация с дедлайном для важного клиента...
+                    </p>
+                </div>
+            </div>
+
+            <div class="navigation">
+                <button class="nav-btn prev" id="prev-btn" onclick="prevStep()" disabled>← Назад</button>
+                <button class="nav-btn next" id="next-btn" onclick="nextStep()">Далее →</button>
+            </div>
+
+            <div id="final-tips" class="final-tips" style="display: none;">
+                <h3>🎯 Готовы к собеседованию!</h3>
+                <p>• Подготовьте 3-5 разных STAR-историй</p>
+                <p>• Тренируйтесь рассказывать каждую за 1-2 минуты</p>
+                <p>• Используйте конкретные цифры и факты</p>
+                <p>• Фокусируйтесь на своих действиях и результатах</p>
+                <p>• Практикуйтесь вслух перед зеркалом</p>
+                <button class="complete-btn" onclick="goHome()">✨ Завершить обучение</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Инициализация Telegram Web App
+        if (window.Telegram?.WebApp) {
+            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.expand();
+            window.Telegram.WebApp.setHeaderColor('#667eea');
+        }
+
+        let currentStep = 0;
+
+        const steps = [
+            {
+                letter: 'S',
+                title: 'S - Situation',
+                titleRu: 'Ситуация',
+                description: 'Опишите контекст',
+                color: '#3182ce',
+                tips: [
+                    'Где происходило?',
+                    'Кто участвовал?',
+                    'Какие обстоятельства?'
+                ],
+                example: 'В проекте была критическая ситуация с дедлайном для важного клиента. Команда из 5 человек работала над интеграцией новой системы...'
+            },
+            {
+                letter: 'T',
+                title: 'T - Task',
+                titleRu: 'Задача',
+                description: 'Ваша цель',
+                color: '#38a169',
+                tips: [
+                    'Что нужно было сделать?',
+                    'Какая цель?',
+                    'Ваша ответственность?'
+                ],
+                example: 'Моя задача была найти решение за 2 дня и координировать работу команды, чтобы избежать штрафных санкций...'
+            },
+            {
+                letter: 'A',
+                title: 'A - Action',
+                titleRu: 'Действие',
+                description: 'Что вы делали',
+                color: '#ed8936',
+                tips: [
+                    'Конкретные шаги?',
+                    'Как действовали?',
+                    'Какие решения?'
+                ],
+                example: 'Я реорганизовал рабочий процесс, внедрил ежедневные 15-минутные созвоны, перераспределил задачи и лично работал с техподдержкой...'
+            },
+            {
+                letter: 'R',
+                title: 'R - Result',
+                titleRu: 'Результат',
+                description: 'Итоги',
+                color: '#805ad5',
+                tips: [
+                    'Какой результат?',
+                    'Что получили?',
+                    'Чему научились?'
+                ],
+                example: 'Проект завершили на день раньше срока, клиент был доволен, получили бонус 15% и дополнительный контракт на следующий год...'
             }
-          }, []);
+        ];
 
-          const starSteps = [
-            {
-              letter: 'S',
-              title: 'Situation',
-              titleRu: 'Ситуация',
-              description: 'Опишите контекст',
-              icon: Users,
-              color: 'bg-blue-500',
-              tips: [
-                'Где происходило?',
-                'Кто участвовал?',
-                'Какие обстоятельства?'
-              ],
-              example: 'В проекте была критическая ситуация с дедлайном...'
-            },
-            {
-              letter: 'T',
-              title: 'Task',
-              titleRu: 'Задача',
-              description: 'Ваша цель',
-              icon: Target,
-              color: 'bg-green-500',
-              tips: [
-                'Что нужно было сделать?',
-                'Какая цель?',
-                'Ваша ответственность?'
-              ],
-              example: 'Моя задача - найти решение за 2 дня...'
-            },
-            {
-              letter: 'A',
-              title: 'Action',
-              titleRu: 'Действие',
-              description: 'Что вы делали',
-              icon: Zap,
-              color: 'bg-orange-500',
-              tips: [
-                'Конкретные шаги?',
-                'Как действовали?',
-                'Какие решения?'
-              ],
-              example: 'Я реорганизовал команду и внедрил новый процесс...'
-            },
-            {
-              letter: 'R',
-              title: 'Result',
-              titleRu: 'Результат',
-              description: 'Итоги',
-              icon: Trophy,
-              color: 'bg-purple-500',
-              tips: [
-                'Какой результат?',
-                'Что получили?',
-                'Чему научились?'
-              ],
-              example: 'Проект завершен на 3 дня раньше, клиент доволен...'
+        function startLearning() {
+            document.getElementById('home-view').style.display = 'none';
+            document.getElementById('learn-view').style.display = 'block';
+            updateStep();
+        }
+
+        function goHome() {
+            document.getElementById('learn-view').style.display = 'none';
+            document.getElementById('home-view').style.display = 'block';
+            currentStep = 0;
+        }
+
+        function nextStep() {
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                updateStep();
             }
-          ];
+        }
 
-          // Home View
-          if (currentView === 'home') {
-            return React.createElement('div', { className: "min-h-screen bg-gradient-to-b from-blue-600 to-purple-700 text-white" },
-              React.createElement('div', { className: "p-4" },
-                // Header
-                React.createElement('div', { className: "text-center mb-8" },
-                  React.createElement('div', { className: "inline-flex items-center justify-center w-20 h-20 bg-white bg-opacity-20 rounded-full mb-4" },
-                    React.createElement(MessageCircle, { size: 40 })
-                  ),
-                  React.createElement('h1', { className: "text-3xl font-bold mb-2" }, 'STAR Method'),
-                  React.createElement('p', { className: "text-blue-100" }, 'Структурированные ответы на собеседованиях')
-                ),
+        function prevStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                updateStep();
+            }
+        }
 
-                // Action Button
-                React.createElement('div', { className: "mb-6" },
-                  React.createElement('button', {
-                    onClick: () => setCurrentView('learn'),
-                    className: "w-full bg-white bg-opacity-15 backdrop-blur rounded-xl p-6 text-center hover:bg-opacity-25 transition-all shadow-lg"
-                  },
-                    React.createElement(BookOpen, { className: "mx-auto mb-3 text-blue-200", size: 32 }),
-                    React.createElement('div', { className: "font-bold text-lg mb-1" }, 'Начать обучение'),
-                    React.createElement('div', { className: "text-sm text-blue-200" }, 'Пошаговое изучение метода')
-                  )
-                ),
+        function updateStep() {
+            const step = steps[currentStep];
+            
+            // Обновление прогресса
+            for (let i = 0; i < 4; i++) {
+                const progressItem = document.getElementById(`progress-${i}`);
+                progressItem.classList.toggle('active', i <= currentStep);
+            }
+            
+            // Обновление содержимого
+            document.getElementById('current-step').textContent = currentStep + 1;
+            document.getElementById('step-icon').textContent = step.letter;
+            document.getElementById('step-icon').style.background = step.color;
+            document.getElementById('step-title').textContent = step.title;
+            document.getElementById('step-subtitle').textContent = step.titleRu;
+            document.getElementById('step-description').textContent = step.description;
+            document.getElementById('step-example').textContent = step.example;
+            
+            // Обновление советов
+            const tipsContainer = document.getElementById('tips-container');
+            tipsContainer.innerHTML = '';
+            step.tips.forEach(tip => {
+                const tipDiv = document.createElement('div');
+                tipDiv.className = 'tip-item';
+                tipDiv.textContent = tip;
+                tipsContainer.appendChild(tipDiv);
+            });
+            
+            // Обновление кнопок навигации
+            document.getElementById('prev-btn').disabled = currentStep === 0;
+            document.getElementById('next-btn').disabled = currentStep === steps.length - 1;
+            
+            // Показ финальных советов
+            const finalTips = document.getElementById('final-tips');
+            finalTips.style.display = currentStep === steps.length - 1 ? 'block' : 'none';
+        }
 
-                // Tips
-                React.createElement('div', { className: "mt-6 bg-white bg-opacity-10 backdrop-blur rounded-xl p-4" },
-                  React.createElement('h4', { className: "font-semibold mb-3" }, '💡 Почему STAR работает?'),
-                  React.createElement('div', { className: "space-y-2 text-sm text-blue-100" },
-                    React.createElement('p', null, '• Структурирует ваши мысли'),
-                    React.createElement('p', null, '• Показывает конкретные результаты'),
-                    React.createElement('p', null, '• Демонстрирует ваши навыки'),
-                    React.createElement('p', null, '• Делает ответ запоминающимся')
-                  )
-                )
-              )
-            );
-          }
-
-          // Learn View
-          if (currentView === 'learn') {
-            const currentStep = starSteps[activeStep];
-            const IconComponent = currentStep.icon;
-
-            return React.createElement('div', { className: "min-h-screen bg-gray-50" },
-              // Header
-              React.createElement('div', { className: "bg-white shadow-sm sticky top-0 z-10" },
-                React.createElement('div', { className: "flex items-center p-4" },
-                  React.createElement('button', { 
-                    onClick: () => setCurrentView('home'), 
-                    className: "mr-3" 
-                  },
-                    React.createElement(ArrowLeft, { size: 24, className: "text-gray-600" })
-                  ),
-                  React.createElement('h1', { className: "font-semibold text-gray-800" }, 'Изучение метода')
-                ),
-                React.createElement('div', { className: "px-4 pb-4" },
-                  React.createElement('div', { className: "flex items-center space-x-2" },
-                    starSteps.map((_, index) =>
-                      React.createElement('div', {
-                        key: index,
-                        className: `h-2 flex-1 rounded ${index <= activeStep ? 'bg-blue-500' : 'bg-gray-200'}`
-                      })
-                    )
-                  ),
-                  React.createElement('p', { className: "text-sm text-gray-500 mt-2" },
-                    `Шаг ${activeStep + 1} из ${starSteps.length}`
-                  )
-                )
-              ),
-
-              // Content
-              React.createElement('div', { className: "p-4" },
-                React.createElement('div', { className: "bg-white rounded-xl shadow-sm p-6 mb-4" },
-                  React.createElement('div', { className: "flex items-center mb-4" },
-                    React.createElement('div', { className: `w-12 h-12 rounded-full ${currentStep.color} text-white flex items-center justify-center mr-4` },
-                      React.createElement(IconComponent, { size: 24 })
-                    ),
-                    React.createElement('div', null,
-                      React.createElement('h2', { className: "text-xl font-bold" }, `${currentStep.letter} - ${currentStep.title}`),
-                      React.createElement('p', { className: "text-gray-600" }, currentStep.titleRu)
-                    )
-                  ),
-
-                  React.createElement('p', { className: "text-gray-700 mb-4" }, currentStep.description),
-
-                  React.createElement('div', { className: "mb-4" },
-                    React.createElement('h3', { className: "font-semibold mb-2" }, 'Ключевые вопросы:'),
-                    React.createElement('div', { className: "space-y-2" },
-                      currentStep.tips.map((tip, index) =>
-                        React.createElement('div', { key: index, className: "flex items-start" },
-                          React.createElement('div', { className: "w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0" }),
-                          React.createElement('span', { className: "text-gray-700" }, tip)
-                        )
-                      )
-                    )
-                  ),
-
-                  React.createElement('div', { className: "bg-blue-50 rounded-lg p-4" },
-                    React.createElement('h3', { className: "font-semibold mb-2 text-blue-800" }, 'Пример:'),
-                    React.createElement('p', { className: "text-blue-700 text-sm" }, currentStep.example)
-                  )
-                ),
-
-                // Navigation
-                React.createElement('div', { className: "flex justify-between" },
-                  React.createElement('button', {
-                    onClick: () => setActiveStep(Math.max(0, activeStep - 1)),
-                    disabled: activeStep === 0,
-                    className: "flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-lg disabled:opacity-50"
-                  },
-                    React.createElement(ArrowLeft, { size: 16, className: "mr-1" }),
-                    'Назад'
-                  ),
-                  React.createElement('button', {
-                    onClick: () => setActiveStep(Math.min(starSteps.length - 1, activeStep + 1)),
-                    disabled: activeStep === starSteps.length - 1,
-                    className: "flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg disabled:opacity-50"
-                  },
-                    'Далее',
-                    React.createElement(ArrowRight, { size: 16, className: "ml-1" })
-                  )
-                ),
-
-                // Final Tips (shown only on last step)
-                activeStep === starSteps.length - 1 && 
-                React.createElement('div', { className: "mt-6 bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-4" },
-                  React.createElement('h3', { className: "font-semibold mb-3 text-green-800" }, '🎯 Готовы к собеседованию!'),
-                  React.createElement('div', { className: "space-y-2 text-sm text-green-700" },
-                    React.createElement('p', null, '• Подготовьте 3-5 разных STAR-историй'),
-                    React.createElement('p', null, '• Тренируйтесь рассказывать каждую за 1-2 минуты'),
-                    React.createElement('p', null, '• Используйте конкретные цифры и факты'),
-                    React.createElement('p', null, '• Фокусируйтесь на своих действиях и результатах'),
-                    React.createElement('p', null, '• Практикуйтесь вслух перед зеркалом')
-                  ),
-                  React.createElement('button', {
-                    onClick: () => setCurrentView('home'),
-                    className: "mt-3 w-full bg-green-600 text-white py-2 rounded-lg font-medium"
-                  },
-                    '✨ Завершить обучение'
-                  )
-                )
-              )
-            );
-          }
-
-          return null;
-        };
-
-        // Render the app
-        const container = document.getElementById('root');
-        const root = ReactDOM.createRoot(container);
-        root.render(React.createElement(StarMethodMiniApp));
+        // Проверка работы
+        console.log('STAR Method App загружен успешно!');
     </script>
 </body>
 </html>
