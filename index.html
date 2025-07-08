@@ -1,455 +1,268 @@
-import React, { useState, useEffect } from 'react';
-import { CheckCircle, Circle, ArrowRight, ArrowLeft, Lightbulb, Users, Target, Zap, Trophy, BookOpen, MessageCircle, Home } from 'lucide-react';
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STAR Method Mini App</title>
+    
+    <!-- Telegram Web App Script -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+    <!-- React and Babel -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        }
+        .telegram-viewport {
+            height: 100vh;
+            overflow-x: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div id="root" class="telegram-viewport"></div>
 
-const StarMethodMiniApp = () => {
-  const [currentView, setCurrentView] = useState('home');
-  const [activeStep, setActiveStep] = useState(0);
-  const [userAnswers, setUserAnswers] = useState({
-    situation: '',
-    task: '',
-    action: '',
-    result: ''
-  });
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { ArrowRight, ArrowLeft, Users, Target, Zap, Trophy, BookOpen, MessageCircle } = lucide;
 
-  // Инициализация для Telegram Mini App
-  useEffect(() => {
-    if (window.Telegram?.WebApp) {
-      window.Telegram.WebApp.ready();
-      window.Telegram.WebApp.expand();
-      window.Telegram.WebApp.setHeaderColor('#1e40af');
-    }
-  }, []);
+        const StarMethodMiniApp = () => {
+          const [currentView, setCurrentView] = useState('home');
+          const [activeStep, setActiveStep] = useState(0);
 
-  const starSteps = [
-    {
-      letter: 'S',
-      title: 'Situation',
-      titleRu: 'Ситуация',
-      description: 'Опишите контекст',
-      icon: Users,
-      color: 'bg-blue-500',
-      tips: [
-        'Где происходило?',
-        'Кто участвовал?',
-        'Какие обстоятельства?'
-      ],
-      example: 'В проекте была критическая ситуация с дедлайном...'
-    },
-    {
-      letter: 'T',
-      title: 'Task',
-      titleRu: 'Задача',
-      description: 'Ваша цель',
-      icon: Target,
-      color: 'bg-green-500',
-      tips: [
-        'Что нужно было сделать?',
-        'Какая цель?',
-        'Ваша ответственность?'
-      ],
-      example: 'Моя задача - найти решение за 2 дня...'
-    },
-    {
-      letter: 'A',
-      title: 'Action',
-      titleRu: 'Действие',
-      description: 'Что вы делали',
-      icon: Zap,
-      color: 'bg-orange-500',
-      tips: [
-        'Конкретные шаги?',
-        'Как действовали?',
-        'Какие решения?'
-      ],
-      example: 'Я реорганизовал команду и внедрил новый процесс...'
-    },
-    {
-      letter: 'R',
-      title: 'Result',
-      titleRu: 'Результат',
-      description: 'Итоги',
-      icon: Trophy,
-      color: 'bg-purple-500',
-      tips: [
-        'Какой результат?',
-        'Что получили?',
-        'Чему научились?'
-      ],
-      example: 'Проект завершен на 3 дня раньше, клиент доволен...'
-    }
-  ];
+          // Инициализация для Telegram Mini App
+          useEffect(() => {
+            if (window.Telegram?.WebApp) {
+              window.Telegram.WebApp.ready();
+              window.Telegram.WebApp.expand();
+              window.Telegram.WebApp.setHeaderColor('#1e40af');
+            }
+          }, []);
 
-  const popularQuestions = [
-    'Расскажите о сложной проблеме',
-    'Пример лидерства',
-    'Работа в команде',
-    'Конфликтная ситуация',
-    'Ваш успешный проект',
-    'Работа под давлением'
-  ];
+          const starSteps = [
+            {
+              letter: 'S',
+              title: 'Situation',
+              titleRu: 'Ситуация',
+              description: 'Опишите контекст',
+              icon: Users,
+              color: 'bg-blue-500',
+              tips: [
+                'Где происходило?',
+                'Кто участвовал?',
+                'Какие обстоятельства?'
+              ],
+              example: 'В проекте была критическая ситуация с дедлайном...'
+            },
+            {
+              letter: 'T',
+              title: 'Task',
+              titleRu: 'Задача',
+              description: 'Ваша цель',
+              icon: Target,
+              color: 'bg-green-500',
+              tips: [
+                'Что нужно было сделать?',
+                'Какая цель?',
+                'Ваша ответственность?'
+              ],
+              example: 'Моя задача - найти решение за 2 дня...'
+            },
+            {
+              letter: 'A',
+              title: 'Action',
+              titleRu: 'Действие',
+              description: 'Что вы делали',
+              icon: Zap,
+              color: 'bg-orange-500',
+              tips: [
+                'Конкретные шаги?',
+                'Как действовали?',
+                'Какие решения?'
+              ],
+              example: 'Я реорганизовал команду и внедрил новый процесс...'
+            },
+            {
+              letter: 'R',
+              title: 'Result',
+              titleRu: 'Результат',
+              description: 'Итоги',
+              icon: Trophy,
+              color: 'bg-purple-500',
+              tips: [
+                'Какой результат?',
+                'Что получили?',
+                'Чему научились?'
+              ],
+              example: 'Проект завершен на 3 дня раньше, клиент доволен...'
+            }
+          ];
 
-  const handleAnswerChange = (step, value) => {
-    setUserAnswers(prev => ({
-      ...prev,
-      [step]: value
-    }));
-  };
+          // Home View
+          if (currentView === 'home') {
+            return React.createElement('div', { className: "min-h-screen bg-gradient-to-b from-blue-600 to-purple-700 text-white" },
+              React.createElement('div', { className: "p-4" },
+                // Header
+                React.createElement('div', { className: "text-center mb-8" },
+                  React.createElement('div', { className: "inline-flex items-center justify-center w-20 h-20 bg-white bg-opacity-20 rounded-full mb-4" },
+                    React.createElement(MessageCircle, { size: 40 })
+                  ),
+                  React.createElement('h1', { className: "text-3xl font-bold mb-2" }, 'STAR Method'),
+                  React.createElement('p', { className: "text-blue-100" }, 'Структурированные ответы на собеседованиях')
+                ),
 
-  const getStepKey = (index) => {
-    const keys = ['situation', 'task', 'action', 'result'];
-    return keys[index];
-  };
+                // Action Button
+                React.createElement('div', { className: "mb-6" },
+                  React.createElement('button', {
+                    onClick: () => setCurrentView('learn'),
+                    className: "w-full bg-white bg-opacity-15 backdrop-blur rounded-xl p-6 text-center hover:bg-opacity-25 transition-all shadow-lg"
+                  },
+                    React.createElement(BookOpen, { className: "mx-auto mb-3 text-blue-200", size: 32 }),
+                    React.createElement('div', { className: "font-bold text-lg mb-1" }, 'Начать обучение'),
+                    React.createElement('div', { className: "text-sm text-blue-200" }, 'Пошаговое изучение метода')
+                  )
+                ),
 
-  const getCompletedSteps = () => {
-    return Object.values(userAnswers).filter(answer => answer.trim() !== '').length;
-  };
+                // Tips
+                React.createElement('div', { className: "mt-6 bg-white bg-opacity-10 backdrop-blur rounded-xl p-4" },
+                  React.createElement('h4', { className: "font-semibold mb-3" }, '💡 Почему STAR работает?'),
+                  React.createElement('div', { className: "space-y-2 text-sm text-blue-100" },
+                    React.createElement('p', null, '• Структурирует ваши мысли'),
+                    React.createElement('p', null, '• Показывает конкретные результаты'),
+                    React.createElement('p', null, '• Демонстрирует ваши навыки'),
+                    React.createElement('p', null, '• Делает ответ запоминающимся')
+                  )
+                )
+              )
+            );
+          }
 
-  // Home View
-  if (currentView === 'home') {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-blue-600 to-purple-700 text-white">
-        <div className="p-4">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-white bg-opacity-20 rounded-full mb-4">
-              <MessageCircle size={40} />
-            </div>
-            <h1 className="text-3xl font-bold mb-2">STAR Method</h1>
-            <p className="text-blue-100">Структурированные ответы на собеседованиях</p>
-          </div>
+          // Learn View
+          if (currentView === 'learn') {
+            const currentStep = starSteps[activeStep];
+            const IconComponent = currentStep.icon;
 
-          {/* Progress Card */}
-          <div className="bg-white bg-opacity-10 backdrop-blur rounded-xl p-4 mb-6">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-sm font-medium">Прогресс</span>
-              <span className="text-sm">{getCompletedSteps()}/4</span>
-            </div>
-            <div className="w-full bg-white bg-opacity-20 rounded-full h-2">
-              <div 
-                className="bg-white rounded-full h-2 transition-all duration-300"
-                style={{ width: `${(getCompletedSteps() / 4) * 100}%` }}
-              ></div>
-            </div>
-          </div>
+            return React.createElement('div', { className: "min-h-screen bg-gray-50" },
+              // Header
+              React.createElement('div', { className: "bg-white shadow-sm sticky top-0 z-10" },
+                React.createElement('div', { className: "flex items-center p-4" },
+                  React.createElement('button', { 
+                    onClick: () => setCurrentView('home'), 
+                    className: "mr-3" 
+                  },
+                    React.createElement(ArrowLeft, { size: 24, className: "text-gray-600" })
+                  ),
+                  React.createElement('h1', { className: "font-semibold text-gray-800" }, 'Изучение метода')
+                ),
+                React.createElement('div', { className: "px-4 pb-4" },
+                  React.createElement('div', { className: "flex items-center space-x-2" },
+                    starSteps.map((_, index) =>
+                      React.createElement('div', {
+                        key: index,
+                        className: `h-2 flex-1 rounded ${index <= activeStep ? 'bg-blue-500' : 'bg-gray-200'}`
+                      })
+                    )
+                  ),
+                  React.createElement('p', { className: "text-sm text-gray-500 mt-2" },
+                    `Шаг ${activeStep + 1} из ${starSteps.length}`
+                  )
+                )
+              ),
 
-          {/* Action Buttons */}
-          <div className="space-y-3">
-            <button
-              onClick={() => setCurrentView('learn')}
-              className="w-full bg-white bg-opacity-10 backdrop-blur rounded-xl p-4 text-left hover:bg-opacity-20 transition-all"
-            >
-              <div className="flex items-center">
-                <BookOpen className="mr-3 text-blue-200" size={24} />
-                <div>
-                  <div className="font-semibold">Изучить метод</div>
-                  <div className="text-sm text-blue-200">Пошаговое руководство</div>
-                </div>
-              </div>
-            </button>
+              // Content
+              React.createElement('div', { className: "p-4" },
+                React.createElement('div', { className: "bg-white rounded-xl shadow-sm p-6 mb-4" },
+                  React.createElement('div', { className: "flex items-center mb-4" },
+                    React.createElement('div', { className: `w-12 h-12 rounded-full ${currentStep.color} text-white flex items-center justify-center mr-4` },
+                      React.createElement(IconComponent, { size: 24 })
+                    ),
+                    React.createElement('div', null,
+                      React.createElement('h2', { className: "text-xl font-bold" }, `${currentStep.letter} - ${currentStep.title}`),
+                      React.createElement('p', { className: "text-gray-600" }, currentStep.titleRu)
+                    )
+                  ),
 
-            <button
-              onClick={() => setCurrentView('practice')}
-              className="w-full bg-white bg-opacity-10 backdrop-blur rounded-xl p-4 text-left hover:bg-opacity-20 transition-all"
-            >
-              <div className="flex items-center">
-                <Zap className="mr-3 text-orange-200" size={24} />
-                <div>
-                  <div className="font-semibold">Практика</div>
-                  <div className="text-sm text-orange-200">Создать свой ответ</div>
-                </div>
-              </div>
-            </button>
+                  React.createElement('p', { className: "text-gray-700 mb-4" }, currentStep.description),
 
-            <button
-              onClick={() => setCurrentView('questions')}
-              className="w-full bg-white bg-opacity-10 backdrop-blur rounded-xl p-4 text-left hover:bg-opacity-20 transition-all"
-            >
-              <div className="flex items-center">
-                <Lightbulb className="mr-3 text-yellow-200" size={24} />
-                <div>
-                  <div className="font-semibold">Частые вопросы</div>
-                  <div className="text-sm text-yellow-200">Примеры для подготовки</div>
-                </div>
-              </div>
-            </button>
-          </div>
+                  React.createElement('div', { className: "mb-4" },
+                    React.createElement('h3', { className: "font-semibold mb-2" }, 'Ключевые вопросы:'),
+                    React.createElement('div', { className: "space-y-2" },
+                      currentStep.tips.map((tip, index) =>
+                        React.createElement('div', { key: index, className: "flex items-start" },
+                          React.createElement('div', { className: "w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0" }),
+                          React.createElement('span', { className: "text-gray-700" }, tip)
+                        )
+                      )
+                    )
+                  ),
 
-          {/* Quick STAR Overview */}
-          <div className="mt-6">
-            <h3 className="text-lg font-semibold mb-3 text-center">Быстрая справка</h3>
-            <div className="grid grid-cols-2 gap-3">
-              {starSteps.map((step, index) => {
-                const IconComponent = step.icon;
-                return (
-                  <div key={index} className="bg-white bg-opacity-10 backdrop-blur rounded-lg p-3 text-center">
-                    <div className={`w-8 h-8 rounded-full ${step.color} text-white flex items-center justify-center mx-auto mb-2 text-sm font-bold`}>
-                      {step.letter}
-                    </div>
-                    <div className="text-sm font-medium">{step.titleRu}</div>
-                    <div className="text-xs text-blue-200 mt-1">{step.description}</div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+                  React.createElement('div', { className: "bg-blue-50 rounded-lg p-4" },
+                    React.createElement('h3', { className: "font-semibold mb-2 text-blue-800" }, 'Пример:'),
+                    React.createElement('p', { className: "text-blue-700 text-sm" }, currentStep.example)
+                  )
+                ),
 
-  // Learn View
-  if (currentView === 'learn') {
-    const currentStep = starSteps[activeStep];
-    const IconComponent = currentStep.icon;
+                // Navigation
+                React.createElement('div', { className: "flex justify-between" },
+                  React.createElement('button', {
+                    onClick: () => setActiveStep(Math.max(0, activeStep - 1)),
+                    disabled: activeStep === 0,
+                    className: "flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-lg disabled:opacity-50"
+                  },
+                    React.createElement(ArrowLeft, { size: 16, className: "mr-1" }),
+                    'Назад'
+                  ),
+                  React.createElement('button', {
+                    onClick: () => setActiveStep(Math.min(starSteps.length - 1, activeStep + 1)),
+                    disabled: activeStep === starSteps.length - 1,
+                    className: "flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg disabled:opacity-50"
+                  },
+                    'Далее',
+                    React.createElement(ArrowRight, { size: 16, className: "ml-1" })
+                  )
+                ),
 
-    return (
-      <div className="min-h-screen bg-gray-50">
-        {/* Header */}
-        <div className="bg-white shadow-sm sticky top-0 z-10">
-          <div className="flex items-center p-4">
-            <button onClick={() => setCurrentView('home')} className="mr-3">
-              <ArrowLeft size={24} className="text-gray-600" />
-            </button>
-            <h1 className="font-semibold text-gray-800">Изучение метода</h1>
-          </div>
-          <div className="px-4 pb-4">
-            <div className="flex items-center space-x-2">
-              {starSteps.map((_, index) => (
-                <div
-                  key={index}
-                  className={`h-2 flex-1 rounded ${
-                    index <= activeStep ? 'bg-blue-500' : 'bg-gray-200'
-                  }`}
-                ></div>
-              ))}
-            </div>
-            <p className="text-sm text-gray-500 mt-2">
-              Шаг {activeStep + 1} из {starSteps.length}
-            </p>
-          </div>
-        </div>
+                // Final Tips (shown only on last step)
+                activeStep === starSteps.length - 1 && 
+                React.createElement('div', { className: "mt-6 bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-4" },
+                  React.createElement('h3', { className: "font-semibold mb-3 text-green-800" }, '🎯 Готовы к собеседованию!'),
+                  React.createElement('div', { className: "space-y-2 text-sm text-green-700" },
+                    React.createElement('p', null, '• Подготовьте 3-5 разных STAR-историй'),
+                    React.createElement('p', null, '• Тренируйтесь рассказывать каждую за 1-2 минуты'),
+                    React.createElement('p', null, '• Используйте конкретные цифры и факты'),
+                    React.createElement('p', null, '• Фокусируйтесь на своих действиях и результатах'),
+                    React.createElement('p', null, '• Практикуйтесь вслух перед зеркалом')
+                  ),
+                  React.createElement('button', {
+                    onClick: () => setCurrentView('home'),
+                    className: "mt-3 w-full bg-green-600 text-white py-2 rounded-lg font-medium"
+                  },
+                    '✨ Завершить обучение'
+                  )
+                )
+              )
+            );
+          }
 
-        {/* Content */}
-        <div className="p-4">
-          <div className="bg-white rounded-xl shadow-sm p-6 mb-4">
-            <div className="flex items-center mb-4">
-              <div className={`w-12 h-12 rounded-full ${currentStep.color} text-white flex items-center justify-center mr-4`}>
-                <IconComponent size={24} />
-              </div>
-              <div>
-                <h2 className="text-xl font-bold">{currentStep.letter} - {currentStep.title}</h2>
-                <p className="text-gray-600">{currentStep.titleRu}</p>
-              </div>
-            </div>
+          return null;
+        };
 
-            <p className="text-gray-700 mb-4">{currentStep.description}</p>
-
-            <div className="mb-4">
-              <h3 className="font-semibold mb-2">Ключевые вопросы:</h3>
-              <div className="space-y-2">
-                {currentStep.tips.map((tip, index) => (
-                  <div key={index} className="flex items-start">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                    <span className="text-gray-700">{tip}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="bg-blue-50 rounded-lg p-4">
-              <h3 className="font-semibold mb-2 text-blue-800">Пример:</h3>
-              <p className="text-blue-700 text-sm">{currentStep.example}</p>
-            </div>
-          </div>
-
-          {/* Navigation */}
-          <div className="flex justify-between">
-            <button
-              onClick={() => setActiveStep(Math.max(0, activeStep - 1))}
-              disabled={activeStep === 0}
-              className="flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-lg disabled:opacity-50"
-            >
-              <ArrowLeft size={16} className="mr-1" />
-              Назад
-            </button>
-            <button
-              onClick={() => setActiveStep(Math.min(starSteps.length - 1, activeStep + 1))}
-              disabled={activeStep === starSteps.length - 1}
-              className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg disabled:opacity-50"
-            >
-              Далее
-              <ArrowRight size={16} className="ml-1" />
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Practice View
-  if (currentView === 'practice') {
-    const currentStep = starSteps[activeStep];
-
-    return (
-      <div className="min-h-screen bg-gray-50">
-        {/* Header */}
-        <div className="bg-white shadow-sm sticky top-0 z-10">
-          <div className="flex items-center p-4">
-            <button onClick={() => setCurrentView('home')} className="mr-3">
-              <ArrowLeft size={24} className="text-gray-600" />
-            </button>
-            <h1 className="font-semibold text-gray-800">Практика</h1>
-          </div>
-        </div>
-
-        <div className="p-4">
-          {/* Steps Navigation */}
-          <div className="bg-white rounded-xl shadow-sm p-4 mb-4">
-            <div className="grid grid-cols-4 gap-2">
-              {starSteps.map((step, index) => {
-                const isCompleted = userAnswers[getStepKey(index)].trim() !== '';
-                const isActive = activeStep === index;
-                
-                return (
-                  <button
-                    key={index}
-                    onClick={() => setActiveStep(index)}
-                    className={`p-3 rounded-lg text-center transition-all ${
-                      isActive 
-                        ? 'bg-blue-500 text-white' 
-                        : isCompleted 
-                        ? 'bg-green-100 text-green-700' 
-                        : 'bg-gray-100 text-gray-600'
-                    }`}
-                  >
-                    <div className="font-bold">{step.letter}</div>
-                    <div className="text-xs mt-1">{step.titleRu}</div>
-                    {isCompleted && !isActive && (
-                      <CheckCircle size={16} className="mx-auto mt-1" />
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Current Step */}
-          <div className="bg-white rounded-xl shadow-sm p-4 mb-4">
-            <h2 className="font-semibold mb-2">
-              {currentStep.letter} - {currentStep.titleRu}
-            </h2>
-            <p className="text-gray-600 text-sm mb-3">{currentStep.description}</p>
-            
-            <textarea
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-              rows="6"
-              placeholder="Напишите ваш ответ здесь..."
-              value={userAnswers[getStepKey(activeStep)]}
-              onChange={(e) => handleAnswerChange(getStepKey(activeStep), e.target.value)}
-            />
-
-            <div className="mt-3">
-              <details className="text-sm">
-                <summary className="cursor-pointer text-blue-600 font-medium">
-                  Подсказки для этого шага
-                </summary>
-                <div className="mt-2 space-y-1">
-                  {currentStep.tips.map((tip, index) => (
-                    <div key={index} className="text-gray-600">• {tip}</div>
-                  ))}
-                </div>
-              </details>
-            </div>
-          </div>
-
-          {/* Progress Summary */}
-          <div className="bg-white rounded-xl shadow-sm p-4">
-            <h3 className="font-semibold mb-3">Ваш прогресс</h3>
-            <div className="space-y-2">
-              {starSteps.map((step, index) => {
-                const isCompleted = userAnswers[getStepKey(index)].trim() !== '';
-                return (
-                  <div key={index} className="flex items-center">
-                    {isCompleted ? (
-                      <CheckCircle className="text-green-500 mr-2" size={20} />
-                    ) : (
-                      <Circle className="text-gray-300 mr-2" size={20} />
-                    )}
-                    <span className={`text-sm ${isCompleted ? 'text-green-700' : 'text-gray-500'}`}>
-                      {step.letter} - {step.titleRu}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Questions View
-  if (currentView === 'questions') {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        {/* Header */}
-        <div className="bg-white shadow-sm sticky top-0 z-10">
-          <div className="flex items-center p-4">
-            <button onClick={() => setCurrentView('home')} className="mr-3">
-              <ArrowLeft size={24} className="text-gray-600" />
-            </button>
-            <h1 className="font-semibold text-gray-800">Частые вопросы</h1>
-          </div>
-        </div>
-
-        <div className="p-4">
-          <div className="mb-4">
-            <p className="text-gray-600 text-sm">
-              Популярные вопросы на собеседованиях, которые можно отвечать по STAR-методу:
-            </p>
-          </div>
-
-          <div className="space-y-3">
-            {popularQuestions.map((question, index) => (
-              <div key={index} className="bg-white rounded-xl shadow-sm p-4">
-                <div className="flex items-start">
-                  <div className="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mr-3 mt-1 flex-shrink-0 font-semibold text-sm">
-                    {index + 1}
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-800">{question}</p>
-                    <button 
-                      onClick={() => setCurrentView('practice')}
-                      className="text-blue-600 text-sm mt-2 font-medium"
-                    >
-                      Попробовать ответить →
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Tips */}
-          <div className="mt-6 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl p-4">
-            <div className="flex items-center mb-3">
-              <Lightbulb className="text-yellow-600 mr-2" size={20} />
-              <h3 className="font-semibold text-gray-800">Советы</h3>
-            </div>
-            <div className="space-y-2 text-sm text-gray-700">
-              <p>• Подготовьте 3-5 разных историй</p>
-              <p>• Каждая история должна занимать 1-2 минуты</p>
-              <p>• Используйте конкретные цифры и факты</p>
-              <p>• Практикуйтесь вслух</p>
-              <p>• Фокусируйтесь на своей роли</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return null;
-};
-
-export default StarMethodMiniApp;
+        // Render the app
+        const container = document.getElementById('root');
+        const root = ReactDOM.createRoot(container);
+        root.render(React.createElement(StarMethodMiniApp));
+    </script>
+</body>
+</html>
