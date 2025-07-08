@@ -1,198 +1,329 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Числа Mini App</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+import React, { useState } from 'react';
+import { CheckCircle, Circle, ArrowRight, Lightbulb, Users, Target, Zap, Trophy } from 'lucide-react';
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--tg-theme-bg-color, #ffffff);
-            color: var(--tg-theme-text-color, #000000);
-            padding: 20px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
+const StarMethodGuide = () => {
+  const [activeStep, setActiveStep] = useState(0);
+  const [userAnswers, setUserAnswers] = useState({
+    situation: '',
+    task: '',
+    action: '',
+    result: ''
+  });
 
-        .container {
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
+  const starSteps = [
+    {
+      letter: 'S',
+      title: 'Situation',
+      titleRu: 'Ситуация',
+      description: 'Beschreiben Sie den Kontext oder Hintergrund',
+      descriptionRu: 'Опишите контекст или предысторию',
+      icon: Users,
+      color: 'bg-blue-500',
+      questions: [
+        'Wo und wann fand die Situation statt?',
+        'Wer war beteiligt?',
+        'Was war der Ausgangspunkt?'
+      ],
+      questionsRu: [
+        'Где и когда происходила ситуация?',
+        'Кто был вовлечен?',
+        'Какая была отправная точка?'
+      ],
+      example: 'In meinem letzten Projekt als Teamleiter hatten wir eine kritische Deadline für einen wichtigen Kunden...',
+      exampleRu: 'В моем последнем проекте в качестве руководителя команды у нас был критический дедлайн для важного клиента...'
+    },
+    {
+      letter: 'T',
+      title: 'Task',
+      titleRu: 'Задача',
+      description: 'Erklären Sie Ihre spezifische Aufgabe oder Verantwortung',
+      descriptionRu: 'Объясните вашу конкретную задачу или ответственность',
+      icon: Target,
+      color: 'bg-green-500',
+      questions: [
+        'Was war Ihr spezifisches Ziel?',
+        'Welche Herausforderung mussten Sie bewältigen?',
+        'Was wurde von Ihnen erwartet?'
+      ],
+      questionsRu: [
+        'Какая была ваша конкретная цель?',
+        'С каким вызовом вам нужно было справиться?',
+        'Что от вас ожидалось?'
+      ],
+      example: 'Meine Aufgabe war es, das Team zu motivieren und einen Weg zu finden, das Projekt trotz Zeitdruck erfolgreich abzuschließen...',
+      exampleRu: 'Моей задачей было мотивировать команду и найти способ успешно завершить проект несмотря на нехватку времени...'
+    },
+    {
+      letter: 'A',
+      title: 'Action',
+      titleRu: 'Действие',
+      description: 'Schildern Sie die konkreten Schritte, die Sie unternommen haben',
+      descriptionRu: 'Опишите конкретные шаги, которые вы предприняли',
+      icon: Zap,
+      color: 'bg-orange-500',
+      questions: [
+        'Welche spezifischen Maßnahmen haben Sie ergriffen?',
+        'Wie sind Sie vorgegangen?',
+        'Welche Entscheidungen haben Sie getroffen?'
+      ],
+      questionsRu: [
+        'Какие конкретные меры вы приняли?',
+        'Как вы действовали?',
+        'Какие решения вы приняли?'
+      ],
+      example: 'Ich habe täglich kurze Stand-up-Meetings eingeführt, Aufgaben neu priorisiert und zusätzliche Ressourcen organisiert...',
+      exampleRu: 'Я внедрил ежедневные короткие совещания, перерасставил приоритеты задач и организовал дополнительные ресурсы...'
+    },
+    {
+      letter: 'R',
+      title: 'Result',
+      titleRu: 'Результат',
+      description: 'Präsentieren Sie die erzielten Ergebnisse',
+      descriptionRu: 'Представьте достигнутые результаты',
+      icon: Trophy,
+      color: 'bg-purple-500',
+      questions: [
+        'Was war das Endergebnis?',
+        'Welche Auswirkungen hatte Ihr Handeln?',
+        'Was haben Sie daraus gelernt?'
+      ],
+      questionsRu: [
+        'Каков был конечный результат?',
+        'Какое влияние оказали ваши действия?',
+        'Чему вы научились?'
+      ],
+      example: 'Wir haben das Projekt 2 Tage früher als geplant abgeschlossen, der Kunde war begeistert und hat uns einen Folgeauftrag erteilt...',
+      exampleRu: 'Мы завершили проект на 2 дня раньше запланированного, клиент был в восторге и дал нам следующий заказ...'
+    }
+  ];
 
-        .title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 30px;
-            color: var(--tg-theme-text-color, #000000);
-        }
+  const commonQuestions = [
+    'Erzählen Sie von einer Zeit, als Sie ein schwieriges Problem gelöst haben',
+    'Beschreiben Sie eine Situation, in der Sie Führungsqualitäten gezeigt haben',
+    'Geben Sie ein Beispiel für eine Zeit, als Sie mit Konflikten umgehen mussten',
+    'Erzählen Sie von einem Projekt, auf das Sie besonders stolz sind'
+  ];
 
-        .result-display {
-            background: var(--tg-theme-secondary-bg-color, #f0f0f0);
-            border-radius: 12px;
-            padding: 40px 20px;
-            margin-bottom: 30px;
-            min-height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid var(--tg-theme-hint-color, #e0e0e0);
-        }
+  const commonQuestionsRu = [
+    'Расскажите о времени, когда вы решили сложную проблему',
+    'Опишите ситуацию, в которой вы проявили лидерские качества',
+    'Приведите пример времени, когда вам нужно было справиться с конфликтами',
+    'Расскажите о проекте, которым вы особенно гордитесь'
+  ];
 
-        .result-text {
-            font-size: 32px;
-            font-weight: bold;
-            color: var(--tg-theme-text-color, #000000);
-            opacity: 0;
-            transform: scale(0.8);
-            transition: all 0.3s ease;
-        }
+  const handleAnswerChange = (step, value) => {
+    setUserAnswers(prev => ({
+      ...prev,
+      [step]: value
+    }));
+  };
 
-        .result-text.show {
-            opacity: 1;
-            transform: scale(1);
-        }
+  const getStepKey = (index) => {
+    const keys = ['situation', 'task', 'action', 'result'];
+    return keys[index];
+  };
 
-        .buttons-container {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-        }
+  return (
+    <div className="max-w-6xl mx-auto p-6 bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+      {/* Header */}
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-bold text-gray-800 mb-2">STAR-Methode</h1>
+        <h2 className="text-2xl text-gray-600 mb-4">Strukturierte Antworten in Vorstellungsgesprächen</h2>
+        <p className="text-lg text-gray-500 italic">Структурированные ответы на собеседованиях</p>
+        
+        <div className="flex justify-center items-center mt-6 bg-white rounded-lg p-4 shadow-lg">
+          {starSteps.map((step, index) => {
+            const IconComponent = step.icon;
+            return (
+              <div key={index} className="flex items-center">
+                <div 
+                  className={`w-16 h-16 rounded-full ${step.color} text-white flex items-center justify-center cursor-pointer transition-transform hover:scale-110 ${activeStep === index ? 'scale-110 shadow-lg' : ''}`}
+                  onClick={() => setActiveStep(index)}
+                >
+                  <div className="text-center">
+                    <div className="text-2xl font-bold">{step.letter}</div>
+                  </div>
+                </div>
+                {index < starSteps.length - 1 && (
+                  <ArrowRight className="mx-4 text-gray-400" size={24} />
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
 
-        .number-button {
-            background: var(--tg-theme-button-color, #2481cc);
-            color: var(--tg-theme-button-text-color, #ffffff);
-            border: none;
-            border-radius: 12px;
-            padding: 20px 40px;
-            font-size: 24px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            min-width: 80px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .number-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .number-button:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .number-button:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(36, 129, 204, 0.3);
-        }
-
-        @media (max-width: 320px) {
-            .buttons-container {
-                flex-direction: column;
-                align-items: center;
-            }
+      {/* Main Content */}
+      <div className="grid lg:grid-cols-2 gap-8">
+        {/* Left Column - STAR Steps */}
+        <div className="space-y-6">
+          {starSteps.map((step, index) => {
+            const IconComponent = step.icon;
+            const isActive = activeStep === index;
             
-            .number-button {
-                width: 200px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1 class="title">Выберите число</h1>
-        
-        <div class="result-display">
-            <div class="result-text" id="resultText">Нажмите кнопку</div>
+            return (
+              <div 
+                key={index}
+                className={`bg-white rounded-lg p-6 shadow-lg transition-all duration-300 cursor-pointer ${
+                  isActive ? 'ring-4 ring-blue-300 transform scale-105' : 'hover:shadow-xl'
+                }`}
+                onClick={() => setActiveStep(index)}
+              >
+                <div className="flex items-start space-x-4">
+                  <div className={`w-12 h-12 rounded-lg ${step.color} text-white flex items-center justify-center`}>
+                    <IconComponent size={24} />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold text-gray-800 mb-1">
+                      {step.letter} - {step.title}
+                    </h3>
+                    <p className="text-sm text-gray-500 mb-2">{step.titleRu}</p>
+                    <p className="text-gray-600 mb-3">{step.description}</p>
+                    <p className="text-sm text-gray-500 italic mb-4">{step.descriptionRu}</p>
+                    
+                    {isActive && (
+                      <div className="space-y-4">
+                        <div>
+                          <h4 className="font-semibold text-gray-700 mb-2">Leitfragen / Направляющие вопросы:</h4>
+                          <ul className="space-y-1">
+                            {step.questions.map((question, qIndex) => (
+                              <li key={qIndex} className="text-sm text-gray-600">
+                                <span className="font-medium">• {question}</span>
+                                <br />
+                                <span className="italic text-gray-500 ml-2">{step.questionsRu[qIndex]}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-semibold text-gray-700 mb-2">Beispiel / Пример:</h4>
+                          <div className="bg-gray-50 p-3 rounded border-l-4 border-blue-400">
+                            <p className="text-sm text-gray-700">{step.example}</p>
+                            <p className="text-sm text-gray-500 italic mt-1">{step.exampleRu}</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
-        
-        <div class="buttons-container">
-            <button class="number-button" onclick="showNumber(1)">1</button>
-            <button class="number-button" onclick="showNumber(2)">2</button>
+
+        {/* Right Column - Practice Area */}
+        <div className="space-y-6">
+          {/* Practice Section */}
+          <div className="bg-white rounded-lg p-6 shadow-lg">
+            <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
+              <Lightbulb className="mr-2 text-yellow-500" />
+              Übungsbereich / Область практики
+            </h3>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {starSteps[activeStep].letter} - {starSteps[activeStep].title} / {starSteps[activeStep].titleRu}
+                </label>
+                <textarea
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  rows="4"
+                  placeholder={`Schreiben Sie hier Ihre Antwort für ${starSteps[activeStep].title}... / Напишите здесь ваш ответ для ${starSteps[activeStep].titleRu}...`}
+                  value={userAnswers[getStepKey(activeStep)]}
+                  onChange={(e) => handleAnswerChange(getStepKey(activeStep), e.target.value)}
+                />
+              </div>
+              
+              <div className="flex justify-between">
+                <button
+                  onClick={() => setActiveStep(Math.max(0, activeStep - 1))}
+                  disabled={activeStep === 0}
+                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg disabled:opacity-50 hover:bg-gray-400 transition-colors"
+                >
+                  ← Zurück / Назад
+                </button>
+                <button
+                  onClick={() => setActiveStep(Math.min(starSteps.length - 1, activeStep + 1))}
+                  disabled={activeStep === starSteps.length - 1}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg disabled:opacity-50 hover:bg-blue-600 transition-colors"
+                >
+                  Weiter / Далее →
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Common Questions */}
+          <div className="bg-white rounded-lg p-6 shadow-lg">
+            <h3 className="text-xl font-bold text-gray-800 mb-4">
+              Häufige Fragen / Частые вопросы
+            </h3>
+            <div className="space-y-3">
+              {commonQuestions.map((question, index) => (
+                <div key={index} className="p-3 bg-gray-50 rounded-lg">
+                  <p className="text-sm font-medium text-gray-700">{question}</p>
+                  <p className="text-sm text-gray-500 italic">{commonQuestionsRu[index]}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Progress Indicator */}
+          <div className="bg-white rounded-lg p-6 shadow-lg">
+            <h3 className="text-lg font-bold text-gray-800 mb-4">
+              Fortschritt / Прогресс
+            </h3>
+            <div className="space-y-2">
+              {starSteps.map((step, index) => (
+                <div key={index} className="flex items-center space-x-3">
+                  {userAnswers[getStepKey(index)] ? (
+                    <CheckCircle className="text-green-500" size={20} />
+                  ) : (
+                    <Circle className="text-gray-300" size={20} />
+                  )}
+                  <span className={`text-sm ${userAnswers[getStepKey(index)] ? 'text-green-700 font-medium' : 'text-gray-500'}`}>
+                    {step.letter} - {step.title} / {step.titleRu}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
+      </div>
+
+      {/* Tips Section */}
+      <div className="mt-8 bg-white rounded-lg p-6 shadow-lg">
+        <h3 className="text-xl font-bold text-gray-800 mb-4">
+          💡 Tipps für erfolgreiche STAR-Antworten / Советы для успешных STAR-ответов
+        </h3>
+        <div className="grid md:grid-cols-2 gap-6">
+          <div>
+            <h4 className="font-semibold text-gray-700 mb-2">Deutsch:</h4>
+            <ul className="space-y-2 text-sm text-gray-600">
+              <li>• Seien Sie spezifisch und konkret</li>
+              <li>• Verwenden Sie messbare Ergebnisse</li>
+              <li>• Halten Sie jede Antwort unter 2 Minuten</li>
+              <li>• Bereiten Sie 3-5 STAR-Geschichten vor</li>
+              <li>• Üben Sie laut vor einem Spiegel</li>
+              <li>• Fokussieren Sie sich auf Ihre Rolle</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-semibold text-gray-700 mb-2">Русский:</h4>
+            <ul className="space-y-2 text-sm text-gray-600">
+              <li>• Будьте конкретными и точными</li>
+              <li>• Используйте измеримые результаты</li>
+              <li>• Держите каждый ответ в пределах 2 минут</li>
+              <li>• Подготовьте 3-5 STAR-историй</li>
+              <li>• Практикуйтесь вслух перед зеркалом</li>
+              <li>• Сосредоточьтесь на своей роли</li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
+  );
+};
 
-    <script>
-        // Проверка доступности Telegram Web App
-        let tg = null;
-        let isTelegramApp = false;
-
-        try {
-            if (window.Telegram && window.Telegram.WebApp) {
-                tg = window.Telegram.WebApp;
-                isTelegramApp = true;
-                
-                // Инициализация только если в Telegram
-                tg.expand();
-                tg.setHeaderColor('secondary_bg_color');
-                tg.ready();
-                
-                console.log('Telegram Web App успешно инициализирован');
-            } else {
-                console.log('Приложение запущено вне Telegram - это нормально для тестирования');
-            }
-        } catch (error) {
-            console.log('Ошибка инициализации Telegram Web App:', error.message);
-            console.log('Приложение будет работать в режиме демо');
-        }
-        
-        // Функция для отображения числа
-        function showNumber(number) {
-            const resultText = document.getElementById('resultText');
-            
-            // Анимация исчезновения
-            resultText.classList.remove('show');
-            
-            setTimeout(() => {
-                // Устанавливаем новый текст
-                if (number === 1) {
-                    resultText.textContent = 'Один';
-                } else if (number === 2) {
-                    resultText.textContent = 'Два';
-                }
-                
-                // Анимация появления
-                resultText.classList.add('show');
-                
-                // Добавляем вибрацию только если в Telegram
-                try {
-                    if (isTelegramApp && tg && tg.HapticFeedback) {
-                        tg.HapticFeedback.impactOccurred('light');
-                    }
-                } catch (error) {
-                    // Игнорируем ошибки вибрации
-                }
-            }, 150);
-        }
-
-        // Обработка нажатий клавиш
-        document.addEventListener('keydown', function(event) {
-            if (event.key === '1') {
-                showNumber(1);
-            } else if (event.key === '2') {
-                showNumber(2);
-            }
-        });
-
-        // Показать начальное состояние
-        document.addEventListener('DOMContentLoaded', function() {
-            const resultText = document.getElementById('resultText');
-            setTimeout(() => {
-                resultText.classList.add('show');
-            }, 100);
-        });
-    </script>
-</body>
-</html>
+export default StarMethodGuide;
