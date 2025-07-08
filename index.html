@@ -28,6 +28,37 @@
             margin: 0 auto;
         }
         
+        .language-switcher {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 25px;
+            padding: 5px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .lang-btn {
+            background: none;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .lang-btn.active {
+            background: rgba(255,255,255,0.2);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        .lang-btn:hover {
+            background: rgba(255,255,255,0.15);
+        }
+        
         .header {
             text-align: center;
             margin-bottom: 40px;
@@ -116,6 +147,13 @@
             z-index: 10;
         }
         
+        .learn-top-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
         .back-btn {
             background: none;
             border: none;
@@ -123,7 +161,31 @@
             cursor: pointer;
             color: #4a5568;
             padding: 5px;
-            margin-right: 15px;
+        }
+        
+        .learn-lang-switcher {
+            display: flex;
+            background: #f7fafc;
+            border-radius: 15px;
+            padding: 3px;
+        }
+        
+        .learn-lang-btn {
+            background: none;
+            border: none;
+            color: #4a5568;
+            padding: 5px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .learn-lang-btn.active {
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            color: #2d3748;
         }
         
         .progress-bar {
@@ -274,33 +336,45 @@
 </head>
 <body>
     <div id="home-view" class="container">
+        <!-- Переключатель языков -->
+        <div class="language-switcher">
+            <button class="lang-btn active" onclick="changeLanguage('ru')">🇷🇺 Русский</button>
+            <button class="lang-btn" onclick="changeLanguage('de')">🇩🇪 Deutsch</button>
+        </div>
+
         <!-- Главный экран -->
         <div class="header">
             <div class="icon">💬</div>
             <h1>STAR Method</h1>
-            <p>Структурированные ответы на собеседованиях</p>
+            <p id="main-subtitle">Структурированные ответы на собеседованиях</p>
         </div>
 
         <button class="start-btn" onclick="startLearning()">
             <div style="font-size: 2rem; margin-bottom: 10px;">📚</div>
-            <div style="margin-bottom: 5px;">Начать обучение</div>
-            <div style="font-size: 0.9rem; opacity: 0.8;">Пошаговое изучение метода</div>
+            <div style="margin-bottom: 5px;" id="start-btn-title">Начать обучение</div>
+            <div style="font-size: 0.9rem; opacity: 0.8;" id="start-btn-subtitle">Пошаговое изучение метода</div>
         </button>
 
         <div class="tips">
-            <h3>💡 Почему STAR работает?</h3>
-            <p>• Структурирует ваши мысли</p>
-            <p>• Показывает конкретные результаты</p>
-            <p>• Демонстрирует ваши навыки</p>
-            <p>• Делает ответ запоминающимся</p>
+            <h3 id="tips-title">💡 Почему STAR работает?</h3>
+            <p id="tip-1">• Структурирует ваши мысли</p>
+            <p id="tip-2">• Показывает конкретные результаты</p>
+            <p id="tip-3">• Демонстрирует ваши навыки</p>
+            <p id="tip-4">• Делает ответ запоминающимся</p>
         </div>
     </div>
 
     <div id="learn-view" class="learn-container">
         <!-- Экран обучения -->
         <div class="learn-header">
-            <button class="back-btn" onclick="goHome()">←</button>
-            <span style="font-weight: bold;">Изучение метода</span>
+            <div class="learn-top-row">
+                <button class="back-btn" onclick="goHome()">←</button>
+                <span style="font-weight: bold;" id="learn-title">Изучение метода</span>
+                <div class="learn-lang-switcher">
+                    <button class="learn-lang-btn active" onclick="changeLanguage('ru')">RU</button>
+                    <button class="learn-lang-btn" onclick="changeLanguage('de')">DE</button>
+                </div>
+            </div>
             <div class="progress-bar">
                 <div class="progress-item active" id="progress-0"></div>
                 <div class="progress-item" id="progress-1"></div>
@@ -308,7 +382,7 @@
                 <div class="progress-item" id="progress-3"></div>
             </div>
             <div style="font-size: 0.9rem; color: #718096; margin-top: 5px;">
-                Шаг <span id="current-step">1</span> из 4
+                <span id="step-progress">Шаг</span> <span id="current-step">1</span> <span id="step-of">из</span> 4
             </div>
         </div>
 
@@ -327,7 +401,7 @@
                 </p>
 
                 <div class="tips-section">
-                    <h3 style="margin-bottom: 10px;">Ключевые вопросы:</h3>
+                    <h3 style="margin-bottom: 10px;" id="key-questions">Ключевые вопросы:</h3>
                     <div id="tips-container">
                         <div class="tip-item">Где происходило?</div>
                         <div class="tip-item">Кто участвовал?</div>
@@ -336,7 +410,7 @@
                 </div>
 
                 <div class="example-box">
-                    <h4 style="color: #2b6cb0; margin-bottom: 8px;">Пример ответа:</h4>
+                    <h4 style="color: #2b6cb0; margin-bottom: 8px;" id="example-title">Пример ответа:</h4>
                     <p id="step-example" style="color: #2c5282; font-size: 0.9rem;">
                         В проекте была критическая ситуация с дедлайном для важного клиента...
                     </p>
@@ -344,23 +418,193 @@
             </div>
 
             <div class="navigation">
-                <button class="nav-btn prev" id="prev-btn" onclick="prevStep()" disabled>← Назад</button>
-                <button class="nav-btn next" id="next-btn" onclick="nextStep()">Далее →</button>
+                <button class="nav-btn prev" id="prev-btn" onclick="prevStep()" disabled>
+                    <span id="prev-text">← Назад</span>
+                </button>
+                <button class="nav-btn next" id="next-btn" onclick="nextStep()">
+                    <span id="next-text">Далее →</span>
+                </button>
             </div>
 
             <div id="final-tips" class="final-tips" style="display: none;">
-                <h3>🎯 Готовы к собеседованию!</h3>
-                <p>• Подготовьте 3-5 разных STAR-историй</p>
-                <p>• Тренируйтесь рассказывать каждую за 1-2 минуты</p>
-                <p>• Используйте конкретные цифры и факты</p>
-                <p>• Фокусируйтесь на своих действиях и результатах</p>
-                <p>• Практикуйтесь вслух перед зеркалом</p>
-                <button class="complete-btn" onclick="goHome()">✨ Завершить обучение</button>
+                <h3 id="final-title">🎯 Готовы к собеседованию!</h3>
+                <p id="final-tip-1">• Подготовьте 3-5 разных STAR-историй</p>
+                <p id="final-tip-2">• Тренируйтесь рассказывать каждую за 1-2 минуты</p>
+                <p id="final-tip-3">• Используйте конкретные цифры и факты</p>
+                <p id="final-tip-4">• Фокусируйтесь на своих действиях и результатах</p>
+                <p id="final-tip-5">• Практикуйтесь вслух перед зеркалом</p>
+                <button class="complete-btn" onclick="goHome()">
+                    <span id="complete-text">✨ Завершить обучение</span>
+                </button>
             </div>
         </div>
     </div>
 
     <script>
+        // Переводы
+        const translations = {
+            ru: {
+                mainSubtitle: 'Структурированные ответы на собеседованиях',
+                startBtnTitle: 'Начать обучение',
+                startBtnSubtitle: 'Пошаговое изучение метода',
+                tipsTitle: '💡 Почему STAR работает?',
+                tip1: '• Структурирует ваши мысли',
+                tip2: '• Показывает конкретные результаты',
+                tip3: '• Демонстрирует ваши навыки',
+                tip4: '• Делает ответ запоминающимся',
+                learnTitle: 'Изучение метода',
+                stepProgress: 'Шаг',
+                stepOf: 'из',
+                keyQuestions: 'Ключевые вопросы:',
+                exampleTitle: 'Пример ответа:',
+                prevText: '← Назад',
+                nextText: 'Далее →',
+                finalTitle: '🎯 Готовы к собеседованию!',
+                finalTip1: '• Подготовьте 3-5 разных STAR-историй',
+                finalTip2: '• Тренируйтесь рассказывать каждую за 1-2 минуты',
+                finalTip3: '• Используйте конкретные цифры и факты',
+                finalTip4: '• Фокусируйтесь на своих действиях и результатах',
+                finalTip5: '• Практикуйтесь вслух перед зеркалом',
+                completeText: '✨ Завершить обучение',
+                steps: [
+                    {
+                        letter: 'S',
+                        title: 'S - Situation',
+                        titleRu: 'Ситуация',
+                        description: 'Опишите контекст',
+                        color: '#3182ce',
+                        tips: [
+                            'Где происходило?',
+                            'Кто участвовал?',
+                            'Какие обстоятельства?'
+                        ],
+                        example: 'В нашем проекте возникла критическая ситуация с дедлайном для важного клиента. Команда из 5 разработчиков работала над интеграцией новой платежной системы, но за неделю до сдачи обнаружились серьезные проблемы совместимости...'
+                    },
+                    {
+                        letter: 'T',
+                        title: 'T - Task',
+                        titleRu: 'Задача',
+                        description: 'Ваша цель',
+                        color: '#38a169',
+                        tips: [
+                            'Что нужно было сделать?',
+                            'Какая цель?',
+                            'Ваша ответственность?'
+                        ],
+                        example: 'Моя задача как тимлида была найти решение за 48 часов и координировать работу команды, чтобы избежать штрафных санкций в размере 100,000 рублей и сохранить репутацию компании...'
+                    },
+                    {
+                        letter: 'A',
+                        title: 'A - Action',
+                        titleRu: 'Действие',
+                        description: 'Что вы делали',
+                        color: '#ed8936',
+                        tips: [
+                            'Конкретные шаги?',
+                            'Как действовали?',
+                            'Какие решения?'
+                        ],
+                        example: 'Я немедленно реорганизовал рабочий процесс: внедрил круглосуточные 4-часовые смены, ежедневные 15-минутные созвоны, перераспределил задачи по приоритету и лично связался с техподдержкой платежной системы для получения дополнительной документации...'
+                    },
+                    {
+                        letter: 'R',
+                        title: 'R - Result',
+                        titleRu: 'Результат',
+                        description: 'Итоги',
+                        color: '#805ad5',
+                        tips: [
+                            'Какой результат?',
+                            'Что получили?',
+                            'Чему научились?'
+                        ],
+                        example: 'Мы успешно завершили интеграцию на 8 часов раньше дедлайна. Клиент был настолько доволен, что выдал нам бонус 15% и заключил контракт на следующий год стоимостью 2 млн рублей. Я получил повышение до старшего тимлида...'
+                    }
+                ]
+            },
+            de: {
+                mainSubtitle: 'Strukturierte Antworten in Bewerbungsgesprächen',
+                startBtnTitle: 'Lernen beginnen',
+                startBtnSubtitle: 'Schrittweise Methodenerlernung',
+                tipsTitle: '💡 Warum STAR funktioniert?',
+                tip1: '• Strukturiert Ihre Gedanken',
+                tip2: '• Zeigt konkrete Ergebnisse',
+                tip3: '• Demonstriert Ihre Fähigkeiten',
+                tip4: '• Macht Antworten einprägsam',
+                learnTitle: 'Methode erlernen',
+                stepProgress: 'Schritt',
+                stepOf: 'von',
+                keyQuestions: 'Leitfragen:',
+                exampleTitle: 'Beispielantwort:',
+                prevText: '← Zurück',
+                nextText: 'Weiter →',
+                finalTitle: '🎯 Bereit für das Bewerbungsgespräch!',
+                finalTip1: '• Bereiten Sie 3-5 verschiedene STAR-Geschichten vor',
+                finalTip2: '• Üben Sie, jede in 1-2 Minuten zu erzählen',
+                finalTip3: '• Verwenden Sie konkrete Zahlen und Fakten',
+                finalTip4: '• Fokussieren Sie sich auf Ihre Handlungen und Ergebnisse',
+                finalTip5: '• Üben Sie laut vor dem Spiegel',
+                completeText: '✨ Lernen abschließen',
+                steps: [
+                    {
+                        letter: 'S',
+                        title: 'S - Situation',
+                        titleRu: 'Situation',
+                        description: 'Beschreiben Sie den Kontext',
+                        color: '#3182ce',
+                        tips: [
+                            'Wo fand es statt?',
+                            'Wer war beteiligt?',
+                            'Welche Umstände?'
+                        ],
+                        example: 'In unserem Projekt entstand eine kritische Situation mit der Deadline für einen wichtigen Kunden. Ein 5-köpfiges Entwicklerteam arbeitete an der Integration eines neuen Zahlungssystems, aber eine Woche vor Abgabe wurden schwerwiegende Kompatibilitätsprobleme entdeckt...'
+                    },
+                    {
+                        letter: 'T',
+                        title: 'T - Task',
+                        titleRu: 'Aufgabe',
+                        description: 'Ihr Ziel',
+                        color: '#38a169',
+                        tips: [
+                            'Was musste getan werden?',
+                            'Welches Ziel?',
+                            'Ihre Verantwortung?'
+                        ],
+                        example: 'Meine Aufgabe als Teamleiter war es, binnen 48 Stunden eine Lösung zu finden und die Teamarbeit zu koordinieren, um Vertragsstrafen von 100.000 Rubel zu vermeiden und den Ruf des Unternehmens zu wahren...'
+                    },
+                    {
+                        letter: 'A',
+                        title: 'A - Action',
+                        titleRu: 'Handlung',
+                        description: 'Was Sie getan haben',
+                        color: '#ed8936',
+                        tips: [
+                            'Konkrete Schritte?',
+                            'Wie sind Sie vorgegangen?',
+                            'Welche Entscheidungen?'
+                        ],
+                        example: 'Ich reorganisierte sofort den Arbeitsprozess: führte 24-Stunden-Schichten mit 4-Stunden-Wechseln ein, tägliche 15-minütige Standups, priorisierte Aufgaben neu und kontaktierte persönlich den Support des Zahlungssystems für zusätzliche Dokumentation...'
+                    },
+                    {
+                        letter: 'R',
+                        title: 'R - Result',
+                        titleRu: 'Ergebnis',
+                        description: 'Die Resultate',
+                        color: '#805ad5',
+                        tips: [
+                            'Welches Ergebnis?',
+                            'Was wurde erreicht?',
+                            'Was haben Sie gelernt?'
+                        ],
+                        example: 'Wir schlossen die Integration erfolgreich 8 Stunden vor der Deadline ab. Der Kunde war so zufrieden, dass er uns einen 15%-Bonus gab und einen Folgeauftrag im Wert von 2 Millionen Rubel erteilte. Ich erhielt eine Beförderung zum Senior-Teamleiter...'
+                    }
+                ]
+            }
+        };
+
+        // Текущие настройки
+        let currentLanguage = 'ru';
+        let currentStep = 0;
+
         // Инициализация Telegram Web App
         if (window.Telegram?.WebApp) {
             window.Telegram.WebApp.ready();
@@ -368,62 +612,63 @@
             window.Telegram.WebApp.setHeaderColor('#667eea');
         }
 
-        let currentStep = 0;
-
-        const steps = [
-            {
-                letter: 'S',
-                title: 'S - Situation',
-                titleRu: 'Ситуация',
-                description: 'Опишите контекст',
-                color: '#3182ce',
-                tips: [
-                    'Где происходило?',
-                    'Кто участвовал?',
-                    'Какие обстоятельства?'
-                ],
-                example: 'В проекте была критическая ситуация с дедлайном для важного клиента. Команда из 5 человек работала над интеграцией новой системы...'
-            },
-            {
-                letter: 'T',
-                title: 'T - Task',
-                titleRu: 'Задача',
-                description: 'Ваша цель',
-                color: '#38a169',
-                tips: [
-                    'Что нужно было сделать?',
-                    'Какая цель?',
-                    'Ваша ответственность?'
-                ],
-                example: 'Моя задача была найти решение за 2 дня и координировать работу команды, чтобы избежать штрафных санкций...'
-            },
-            {
-                letter: 'A',
-                title: 'A - Action',
-                titleRu: 'Действие',
-                description: 'Что вы делали',
-                color: '#ed8936',
-                tips: [
-                    'Конкретные шаги?',
-                    'Как действовали?',
-                    'Какие решения?'
-                ],
-                example: 'Я реорганизовал рабочий процесс, внедрил ежедневные 15-минутные созвоны, перераспределил задачи и лично работал с техподдержкой...'
-            },
-            {
-                letter: 'R',
-                title: 'R - Result',
-                titleRu: 'Результат',
-                description: 'Итоги',
-                color: '#805ad5',
-                tips: [
-                    'Какой результат?',
-                    'Что получили?',
-                    'Чему научились?'
-                ],
-                example: 'Проект завершили на день раньше срока, клиент был доволен, получили бонус 15% и дополнительный контракт на следующий год...'
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            
+            // Обновляем активные кнопки языка на главном экране
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.learn-lang-btn').forEach(btn => btn.classList.remove('active'));
+            
+            if (lang === 'ru') {
+                document.querySelectorAll('.lang-btn')[0].classList.add('active');
+                document.querySelectorAll('.learn-lang-btn')[0].classList.add('active');
+            } else {
+                document.querySelectorAll('.lang-btn')[1].classList.add('active');
+                document.querySelectorAll('.learn-lang-btn')[1].classList.add('active');
             }
-        ];
+            
+            updateLanguage();
+        }
+
+        function updateLanguage() {
+            const t = translations[currentLanguage];
+            
+            // Обновляем главный экран
+            document.getElementById('main-subtitle').textContent = t.mainSubtitle;
+            document.getElementById('start-btn-title').textContent = t.startBtnTitle;
+            document.getElementById('start-btn-subtitle').textContent = t.startBtnSubtitle;
+            document.getElementById('tips-title').textContent = t.tipsTitle;
+            document.getElementById('tip-1').textContent = t.tip1;
+            document.getElementById('tip-2').textContent = t.tip2;
+            document.getElementById('tip-3').textContent = t.tip3;
+            document.getElementById('tip-4').textContent = t.tip4;
+            
+            // Обновляем экран обучения
+            document.getElementById('learn-title').textContent = t.learnTitle;
+            document.getElementById('step-progress').textContent = t.stepProgress;
+            document.getElementById('step-of').textContent = t.stepOf;
+            document.getElementById('key-questions').textContent = t.keyQuestions;
+            document.getElementById('example-title').textContent = t.exampleTitle;
+            document.getElementById('prev-text').textContent = t.prevText;
+            document.getElementById('next-text').textContent = t.nextText;
+            
+            // Обновляем финальные советы
+            document.getElementById('final-title').textContent = t.finalTitle;
+            document.getElementById('final-tip-1').textContent = t.finalTip1;
+            document.getElementById('final-tip-2').textContent = t.finalTip2;
+            document.getElementById('final-tip-3').textContent = t.finalTip3;
+            document.getElementById('final-tip-4').textContent = t.finalTip4;
+            document.getElementById('final-tip-5').textContent = t.finalTip5;
+            document.getElementById('complete-text').textContent = t.completeText;
+            
+            // Обновляем текущий шаг если мы в режиме обучения
+            if (document.getElementById('learn-view').style.display !== 'none') {
+                updateStep();
+            }
+            
+            // Обновляем язык документа
+            document.documentElement.lang = currentLanguage;
+        }
 
         function startLearning() {
             document.getElementById('home-view').style.display = 'none';
@@ -438,7 +683,7 @@
         }
 
         function nextStep() {
-            if (currentStep < steps.length - 1) {
+            if (currentStep < translations[currentLanguage].steps.length - 1) {
                 currentStep++;
                 updateStep();
             }
@@ -452,6 +697,7 @@
         }
 
         function updateStep() {
+            const steps = translations[currentLanguage].steps;
             const step = steps[currentStep];
             
             // Обновление прогресса
@@ -488,7 +734,8 @@
             finalTips.style.display = currentStep === steps.length - 1 ? 'block' : 'none';
         }
 
-        // Проверка работы
+        // Инициализация
+        updateLanguage();
         console.log('STAR Method App загружен успешно!');
     </script>
 </body>
